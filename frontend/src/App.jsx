@@ -1,7 +1,15 @@
+import { Outlet } from "react-router-dom";
+import Navigation from "./pages/Auth/Navigation";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/ReactToastify.css";
 function App() {
   return (
     <div>
-      <h1 className="text-3xl font-bold underline">App</h1>
+      <ToastContainer />
+      <Navigation />
+      <main className="py-3">
+        <Outlet />
+      </main>
     </div>
   );
 }
