@@ -36,8 +36,8 @@ const Login = () => {
   };
   return (
     <div>
-      <section className="pl-40 flex flex-wrap">
-        <div className="mr-16 mt-20 ">
+      <section className="flex items-center justify-center min-h-screen gap-50 px-10">
+        <div className="mr-16 mt-20 w-full max-w-md">
           <h1 className="text-2xl font-semibold mb-4">Sign In</h1>
           <form onSubmit={submitHandeler} className="container w-160 ">
             <div className="my-8">
@@ -91,6 +91,11 @@ const Login = () => {
             </p>
           </div>
         </div>
+        <img
+          src="https://c4.wallpaperflare.com/wallpaper/459/87/740/cat-glasses-space-abstract-wallpaper-preview.jpg"
+          alt="wallpaper login page"
+          className="hidden lg:block w-100 h-175 object-cover rounded-2xl shadow-lg"
+        />
       </section>
     </div>
   );
