@@ -1,31 +1,88 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import {
-  useCreateProductMutation,
+  useDeleteProductMutation,
+  useGetProductByIdQuery,
+  useUpdateProductMutation,
   useUploadProductImageMutation,
 } from "../../redux/api/productApiSlice.js";
 import { useFetchCategoriesQuery } from "../../redux/api/categoryApiSlice.js";
 import { toast } from "react-toastify";
 import AdminMenu from "./AdminMenu.jsx";
 
-const ProductList = () => {
-  const [image, setImage] = useState("");
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-  const [category, setCategory] = useState("");
-  const [quantity, setQuantity] = useState("");
-  const [brand, setBrand] = useState("");
-  const [stock, setStock] = useState(0);
-  const [imageUrl, setImageUrl] = useState(null);
+const ProductUpdate = () => {
+  const params = useParams();
+  const { data: productData } = useGetProductByIdQuery(params._id);
+  const [image, setImage] = useState(productData?.image || "");
+  const [name, setName] = useState(productData?.name || "");
+  const [description, setDescription] = useState(
+    productData?.description || "",
+  );
+  const [price, setPrice] = useState(productData?.price || "");
+  const [category, setCategory] = useState(productData?.category || "");
+  const [brand, setBrand] = useState(productData?.brand || "");
+  const [quantity, setQuantity] = useState(productData?.quantity || "");
+
+  const [stock, setStock] = useState(productData?.countInStock);
 
   const navigate = useNavigate();
 
+  const { data: categoryies = [] } = useFetchCategoriesQuery();
   const [uploadProductImage] = useUploadProductImageMutation();
-  const [createProduct] = useCreateProductMutation();
+  const [updateProduct] = useUpdateProductMutation();
+  const [deleteProduct] = useDeleteProductMutation();
 
-  const { data: categoryies } = useFetchCategoriesQuery();
+  useEffect(() => {
+    if (productData && productData._id) {
+      setName(productData.name);
+      setDescription(productData.description);
+      setPrice(productData.price);
+      setCategory(productData.category);
+      setQuantity(productData.quantity);
+      setBrand(productData.brand);
+      setImage(productData.image);
+    }
+  }, [productData]);
 
+  const handelSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const formData = new FormData();
+      formData.append("image", image);
+      formData.append("name", name);
+      formData.append("description", description);
+      formData.append("price", price);
+      formData.append("category", category);
+      formData.append("quantity", quantity);
+      formData.append("brand", brand);
+      formData.append("countInStock", stock);
+
+      const { data } = await updateProduct({ productId: params._id, formData });
+
+      if (data.error) {
+        toast.error("Producat updated failed.Try Again.");
+      } else {
+        toast.success(`${data.name} is updated`);
+        navigate("/admin/allprodutslist");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Producat updated failed.Try Again.");
+    }
+  };
+  const handelDelete = async () => {
+    try {
+      let answer = window.confirm("Are ypu sure to delete this product?");
+      if (!answer) return;
+      const { data } = await deleteProduct(params._id);
+      toast.success(`${data.name} is Deleted`);
+      navigate("/admin/allprodutslist");
+    } catch (error) {
+      console.log(error);
+      toast.error("Producat delete failed.Try Again.");
+    }
+  };
   const uploadFileHandler = async (e) => {
     const formData = new FormData();
     formData.append("image", e.target.files[0]);
@@ -33,36 +90,8 @@ const ProductList = () => {
       const res = await uploadProductImage(formData).unwrap();
       toast.success(res.message);
       setImage(res.image);
-      setImageUrl(res.image);
     } catch (error) {
       toast.error(error?.data?.message || error.error);
-    }
-  };
-  const handelSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      const productData = new FormData();
-      productData.append("image", image);
-      productData.append("name", name);
-      productData.append("description", description);
-      productData.append("price", price);
-      productData.append("category", category);
-      productData.append("quantity", quantity);
-      productData.append("brand", brand);
-      productData.append("countInStock", stock);
-
-      const { data } = await createProduct(productData);
-
-      if (data.error) {
-        toast.error("Producat created failed.Try Again.");
-      } else {
-        toast.success(`${data.name} is created`);
-        navigate("/");
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Producat created failed.Try Again.");
     }
   };
 
@@ -73,10 +102,10 @@ const ProductList = () => {
         <div className="md:w-3/4 p-3">
           <div className="h-12">Create Product</div>
 
-          {imageUrl && (
+          {image && (
             <div className="text-center">
               <img
-                src={imageUrl}
+                src={image}
                 alt="product"
                 className="block mx-auto max-h-50"
               />
@@ -177,12 +206,20 @@ const ProductList = () => {
                 </select>
               </div>
             </div>
-            <button
-              onClick={handelSubmit}
-              className="py-4 px-10 mt-5 rounded-lg border text-lg font-bold bg-pink-600"
-            >
-              Submit
-            </button>
+            <div>
+              <button
+                onClick={handelSubmit}
+                className="py-4 px-10 mt-5 rounded-lg border text-lg font-bold bg-pink-600"
+              >
+                Update
+              </button>
+              <button
+                onClick={handelDelete}
+                className="py-4 px-10 mt-5 ml-4 rounded-lg border text-lg font-bold bg-red-600"
+              >
+                Delete
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -190,4 +227,4 @@ const ProductList = () => {
   );
 };
 
-export default ProductList;
+export default ProductUpdate;
