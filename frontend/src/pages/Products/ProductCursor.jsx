@@ -10,16 +10,15 @@ import { FaClock, FaStar, FaStore } from "react-icons/fa";
 const ProductCarousel = () => {
   const { data: products, isLoading, error } = useGetTopProductsQuery();
 
-  // حل مشكلة استيراد المكون مع Vite وضمان استقرار التصميم
   const ActualSlider = Slider.default || Slider;
 
   const settings = {
-    dots: true, // تفعيل النقاط السفلى بشكل أنيق
+    dots: true,
     infinite: true,
-    speed: 800, // حركة أنعم أثناء التنقل
+    speed: 800,
     slidesToShow: 1,
     slidesToScroll: 1,
-    arrows: false, // إلغاء الأسهم الجانبية التقليدية والاعتماد على النقاط والتمرير التلقائي لمظهر عصري
+    arrows: false,
     autoplay: true,
     autoplaySpeed: 4000,
     adaptiveHeight: true,
@@ -50,9 +49,7 @@ const ProductCarousel = () => {
                   countInStock,
                 }) => (
                   <div key={_id} className="outline-none">
-                    {/* شبكة تقسيم التصميم: نصف للصورة ونصف للتفاصيل */}
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8 lg:p-12 items-center min-h-112.5">
-                      {/* القسم الأول: الصورة مع تأثيرات عمق */}
                       <div className="relative flex justify-center items-center group">
                         <div className="absolute inset-0 bg-pink-500/10 rounded-2xl blur-3xl group-hover:bg-pink-500/20 transition-all duration-500"></div>
                         <img
@@ -62,10 +59,8 @@ const ProductCarousel = () => {
                         />
                       </div>
 
-                      {/* القسم الثاني: تفاصيل المنتج الاحترافية */}
                       <div className="flex flex-col justify-between text-gray-100 space-y-4">
                         <div>
-                          {/* اسم الماركة وحالة المخزون */}
                           <div className="flex items-center gap-3 text-sm text-pink-500 font-semibold uppercase tracking-wider mb-2">
                             <span className="flex items-center gap-1">
                               <FaStore className="text-xs" /> {brand}
@@ -84,7 +79,6 @@ const ProductCarousel = () => {
                             </span>
                           </div>
 
-                          {/* اسم المنتج ووصفه */}
                           <h2 className="text-2xl lg:text-3xl font-bold text-white tracking-tight leading-tight mb-3 line-clamp-1">
                             {name}
                           </h2>
@@ -93,7 +87,6 @@ const ProductCarousel = () => {
                           </p>
                         </div>
 
-                        {/* خط إحصائيات المنتج السريعة */}
                         <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-800/60 text-sm text-gray-300">
                           <div className="flex items-center gap-2">
                             <FaStar className="text-yellow-500" />
@@ -107,7 +100,6 @@ const ProductCarousel = () => {
                           </div>
                         </div>
 
-                        {/* السعر وزر الإضافة للسلة */}
                         <div className="flex items-center justify-between pt-6 mt-auto">
                           <div className="flex flex-col">
                             <span className="text-xs text-gray-400 uppercase tracking-wider">
