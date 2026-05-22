@@ -52,7 +52,7 @@ const ProductList = () => {
       productData.append("brand", brand);
       productData.append("countInStock", stock);
 
-      const { data } = await createProduct(productData);
+      const { data } = await createProduct(productData).unwrap();
 
       if (data.error) {
         toast.error("Producat created failed.Try Again.");

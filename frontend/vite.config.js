@@ -12,4 +12,7 @@ export default defineConfig({
       "/uploads/": "http://localhost:5000",
     },
   },
+  optimizeDeps: {
+    include: ["react-slick"],
+  },
 });

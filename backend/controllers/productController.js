@@ -54,7 +54,7 @@ const updateProductDetails = asyncHandler(async (req, res) => {
       {
         ...req.fields,
       },
-      { new: true },
+      { returnDocument: "after" },
     );
     await product.save();
     res.json(product);
