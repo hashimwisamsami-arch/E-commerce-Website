@@ -6,7 +6,7 @@ import Message from "./components/Message";
 import Product from "./pages/Products/Product";
 const Home = () => {
   const { keyword } = useParams();
-  const { data, isLoading, isError } = useGetProductsQuery({ keyword });
+  const { data, isLoading, error, isError } = useGetProductsQuery({ keyword });
   return (
     <>
       {!keyword ? <Header /> : null}
@@ -14,7 +14,7 @@ const Home = () => {
         <Loader />
       ) : isError ? (
         <Message variant="danger">
-          {isError?.data.message || isError.error}
+          {error?.data.message || isError.error}
         </Message>
       ) : (
         <>
