@@ -73,9 +73,7 @@ const ProductCarousel = () => {
                                   : "text-red-400"
                               }
                             >
-                              {countInStock > 0
-                                ? "متوفر في المخزن"
-                                : "نفد من المخزن"}
+                              {countInStock > 0 ? "In Stock" : " Not In Stock "}
                             </span>
                           </div>
 
@@ -91,7 +89,7 @@ const ProductCarousel = () => {
                           <div className="flex items-center gap-2">
                             <FaStar className="text-yellow-500" />
                             <span>
-                              {rating} ({numReviews} تقييم)
+                              {rating} {numReviews}
                             </span>
                           </div>
                           <div className="flex items-center gap-2">
@@ -103,7 +101,7 @@ const ProductCarousel = () => {
                         <div className="flex items-center justify-between pt-6 mt-auto">
                           <div className="flex flex-col">
                             <span className="text-xs text-gray-400 uppercase tracking-wider">
-                              السعر الحالي
+                              Price
                             </span>
                             <span className="text-3xl font-extrabold text-transparent bg-clip-text bg-linear-to-r from-pink-500 to-rose-400">
                               ${price}
