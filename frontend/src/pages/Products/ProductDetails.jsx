@@ -30,51 +30,46 @@ const ProductDetails = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const {
     data: product,
     isLoading,
     refetch,
     error,
   } = useGetProductDetailsQuery(productId);
+
   const { userInfo } = useSelector((state) => state.auth);
 
-  const [createRivew, { isLoading: loodingProductReivew }] =
+  const [createReview, { isLoading: loadingProductReview }] =
     useCreateReviewMutation();
 
   const addToCartHandler = () => {
     dispatch(addToCart({ ...product, qty }));
     navigate("/cart");
   };
+
   const submitHandler = async (e) => {
     e.preventDefault();
-
     try {
-      await createRivew({
-        productId,
-        rating,
-        comment,
-      }).unwrap();
+      await createReview({ productId, rating, comment }).unwrap();
       refetch();
-      toast.success("Rivew Craeted Successfully");
+      toast.success("Review Created Successfully");
     } catch (error) {
-      console.log(error);
-      console.log(error?.data);
-      console.log(error?.data?.message);
-
       toast.error(error?.data || error.message);
     }
   };
 
   return (
     <>
-      <div>
+      <div className="px-4 sm:px-8 lg:px-16 mt-4">
         <Link
           to="/"
-          className="font-semibold hover:underline hover:text-blue-400 ml-40"
+          className="font-semibold hover:underline hover:text-blue-400"
         >
           Go Back
         </Link>
       </div>
+
       {isLoading ? (
         <Loader />
       ) : error ? (
@@ -82,100 +77,107 @@ const ProductDetails = () => {
           {error?.data?.message || error.message}
         </Message>
       ) : (
-        <>
-          <div className="flex flex-wrap relative items-between mt-8 ml-40">
-            <div>
+        <div className="px-4 sm:px-8 lg:px-16 mt-8">
+          {/* Product image + info */}
+          <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
+            {/* Image */}
+            <div className="relative w-full lg:w-auto shrink-0">
               <img
                 src={product.image}
                 alt={product.name}
-                className="w-full xl:w-200 lg:w-180 md:w-120 sm:w-80 mr-8"
+                className="w-full lg:w-125 xl:w-140 rounded-lg object-cover"
               />
               <HeartIcon product={product} />
             </div>
-            <div className="flex flex-col justify-between">
-              <h2 className="text-2xl font-semibold">{product.name}</h2>
-              <p className="my-4 xl:w-140 lg:w-140 md:w-120  text-blue-500">
+
+            {/* Details */}
+            <div className="flex flex-col justify-between gap-4 flex-1">
+              <h2 className="text-2xl sm:text-3xl font-semibold">
+                {product.name}
+              </h2>
+
+              <p className="text-blue-500 leading-relaxed">
                 {product.description}
               </p>
-              <p className="text-5xl my-4 font-extrabold">$ {product.price}</p>
-              <div className="flex items-center justify-between w-80">
-                <div className="one">
-                  <h1 className="flex items-center mb-6">
-                    <FaStore className="mr-2" /> Brand:{""}
-                    {product.brand}
-                  </h1>
-                  <h1 className="flex items-center mb-6 w-80">
-                    <FaClock className="mr-2" /> Added:{""}
-                    {moment(product.createAt).fromNow()}
-                  </h1>
-                  <h1 className="flex items-center mb-6">
-                    <FaStar className="mr-2" /> Reviews:{""}
-                    {product.numReviwes}
-                  </h1>
-                </div>
-                <div className="two">
-                  <h1 className="flex items-center mb-6">
-                    <FaStar className="mr-2" />
-                    Ratings:{product.rating}
-                  </h1>
-                  <h1 className="flex items-center mb-6">
-                    <FaShoppingCart className="mr-2" />
-                    Quantity:{product.quantity}
-                  </h1>
-                  <h1 className="flex items-center mb-6 w-40">
-                    <FaBox className="mr-2" />
-                    In Stock:{product.countInStock}
-                  </h1>
-                </div>
+
+              <p className="text-4xl sm:text-5xl font-extrabold">
+                ${product.price}
+              </p>
+
+              {/* Meta info grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2">
+                <h1 className="flex items-center gap-2">
+                  <FaStore /> <span className="font-medium">Brand:</span>{" "}
+                  {product.brand}
+                </h1>
+                <h1 className="flex items-center gap-2">
+                  <FaStar /> <span className="font-medium">Ratings:</span>{" "}
+                  {product.rating}
+                </h1>
+                <h1 className="flex items-center gap-2">
+                  <FaClock /> <span className="font-medium">Added:</span>{" "}
+                  {moment(product.createAt).fromNow()}
+                </h1>
+                <h1 className="flex items-center gap-2">
+                  <FaShoppingCart />{" "}
+                  <span className="font-medium">Quantity:</span>{" "}
+                  {product.quantity}
+                </h1>
+                <h1 className="flex items-center gap-2">
+                  <FaStar /> <span className="font-medium">Reviews:</span>{" "}
+                  {product.numReviwes}
+                </h1>
+                <h1 className="flex items-center gap-2">
+                  <FaBox /> <span className="font-medium">In Stock:</span>{" "}
+                  {product.countInStock}
+                </h1>
               </div>
 
-              <div className="flex justify-between flex-wrap">
+              {/* Ratings + quantity selector */}
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                 <Ratings
                   value={product.rating}
                   text={`${product.numReviwes} Reviews`}
                 />
-
                 {product.countInStock > 0 && (
-                  <div>
-                    <select
-                      value={qty}
-                      onChange={(e) => setQty(e.target.value)}
-                      className="p-2 w-24 rounded-lg text-black"
-                    >
-                      {[...Array(product.countInStock).keys()].map((x) => (
-                        <option key={x + 1} value={x + 1}>
-                          {x + 1}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+                  <select
+                    value={qty}
+                    onChange={(e) => setQty(e.target.value)}
+                    className="p-2 w-24 rounded-lg text-black"
+                  >
+                    {[...Array(product.countInStock).keys()].map((x) => (
+                      <option key={x + 1} value={x + 1}>
+                        {x + 1}
+                      </option>
+                    ))}
+                  </select>
                 )}
               </div>
-              <div className="btn-container">
-                <button
-                  onClick={addToCartHandler}
-                  disabled={product.countInStock === 0}
-                  className="bg-pink-600 text-white py-2 px-4 rounded-lg mt-4 md:mt-0"
-                >
-                  Add To Cart
-                </button>
-              </div>
-            </div>
 
-            <div className="mt-20 container flex flex-wrap items-start justify-between ml-40">
-              <ProductTabs
-                loodingProductReivew={loodingProductReivew}
-                userInfo={userInfo}
-                submitHandler={submitHandler}
-                rating={rating}
-                setRating={setRating}
-                comment={comment}
-                setComment={setComment}
-                product={product}
-              />
+              <button
+                onClick={addToCartHandler}
+                disabled={product.countInStock === 0}
+                className="bg-pink-600 text-white py-2 px-6 rounded-lg w-full sm:w-auto self-start disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Add To Cart
+              </button>
             </div>
           </div>
-        </>
+
+          {/* Product tabs */}
+          <div className="mt-16">
+            <ProductTabs
+              loodingProductReivew={loadingProductReview}
+              userInfo={userInfo}
+              submitHandler={submitHandler}
+              rating={rating}
+              setRating={setRating}
+              comment={comment}
+              setComment={setComment}
+              product={product}
+            />
+          </div>
+        </div>
       )}
     </>
   );
