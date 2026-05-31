@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import HeartIcon from "./HeartIcon";
 const SmallProduct = ({ product }) => {
   return (
-    <div className="w-80 ml-8 p-3">
+    <div className="w-80 ml-8 p-3 mt-10">
       <div className="relative">
         <img
           src={product.image}

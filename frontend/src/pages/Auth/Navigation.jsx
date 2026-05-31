@@ -40,7 +40,7 @@ const Navigation = () => {
     <>
       <div
         style={{ zIndex: 999 }}
-        className="hidden lg:flex flex-col justify-between p-4 text-white bg-black w-[4%] hover:w-[15%] h-screen fixed transition-all duration-300 group"
+        className="hidden lg:flex flex-col justify-between p-4 text-white bg-black w-[6%] hover:w-[15%] h-screen fixed transition-all duration-300 group"
         id="navigation-container"
       >
         <div className="flex flex-col justify-center space-y-4">
@@ -96,7 +96,7 @@ const Navigation = () => {
           </Link>
         </div>
 
-        <div className="relative">
+        <div className="relative mb-4">
           <button
             onClick={toggelDropdown}
             className="flex items-center text-gray-800 focus:outline-none"
@@ -128,19 +128,11 @@ const Navigation = () => {
 
           {dropdownOpen && userInfo && (
             <ul
-              className={`absolute right-0 mt-2 mr-14 space-y-2 bg-white text-gray-600 z-50 shadow-lg rounded
-                ${!userInfo.isAdmin ? "-top-20" : "-top-80"}`}
+              className={`absolute left-0 bottom-10 space-y-2 bg-white text-gray-600 z-50 shadow-lg rounded
+        ${!userInfo.isAdmin ? "w-32" : "w-36"}`}
             >
               {userInfo.isAdmin && (
                 <>
-                  <li>
-                    <Link
-                      to="/admin/dashboard"
-                      className="block px-4 py-2 hover:bg-gray-100 whitespace-nowrap"
-                    >
-                      Dashboard
-                    </Link>
-                  </li>
                   <li>
                     <Link
                       to="/admin/productlist"
@@ -155,14 +147,6 @@ const Navigation = () => {
                       className="block px-4 py-2 hover:bg-gray-100 whitespace-nowrap"
                     >
                       Category
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to="/admin/orderlist"
-                      className="block px-4 py-2 hover:bg-gray-100 whitespace-nowrap"
-                    >
-                      Orders
                     </Link>
                   </li>
                   <li>
@@ -291,14 +275,6 @@ const Navigation = () => {
                     <>
                       <li>
                         <Link
-                          to="/admin/dashboard"
-                          className="block px-4 py-2 hover:bg-gray-100 text-sm"
-                        >
-                          Dashboard
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
                           to="/admin/productlist"
                           className="block px-4 py-2 hover:bg-gray-100 text-sm"
                         >
@@ -313,14 +289,7 @@ const Navigation = () => {
                           Category
                         </Link>
                       </li>
-                      <li>
-                        <Link
-                          to="/admin/orderlist"
-                          className="block px-4 py-2 hover:bg-gray-100 text-sm"
-                        >
-                          Orders
-                        </Link>
-                      </li>
+
                       <li>
                         <Link
                           to="/admin/userlist"
@@ -441,14 +410,6 @@ const Navigation = () => {
                     <>
                       <li>
                         <Link
-                          to="/admin/dashboard"
-                          className="block px-4 py-3 hover:bg-gray-100 text-sm text-left"
-                        >
-                          Dashboard
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
                           to="/admin/productlist"
                           className="block px-4 py-3 hover:bg-gray-100 text-sm text-left"
                         >
@@ -463,14 +424,7 @@ const Navigation = () => {
                           Category
                         </Link>
                       </li>
-                      <li>
-                        <Link
-                          to="/admin/orderlist"
-                          className="block px-4 py-3 hover:bg-gray-100 text-sm text-left"
-                        >
-                          Orders
-                        </Link>
-                      </li>
+
                       <li>
                         <Link
                           to="/admin/userlist"
